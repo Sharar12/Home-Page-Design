@@ -66,7 +66,6 @@ const searchableVehicles = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
 
@@ -86,11 +85,8 @@ export default function Navbar() {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Elegant drop-down entrance on page refresh / mount
+  // Scroll listener & hotkeys
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setMounted(true);
-    }, 100);
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
@@ -124,7 +120,6 @@ export default function Navbar() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -231,18 +226,12 @@ export default function Navbar() {
       )}
 
       {/* Floating Header */}
-      <header
-        className={`fixed top-4 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-[1600ms] ease-luxury ${
-          mounted
-            ? "translate-y-0 opacity-100 blur-0 scale-100"
-            : "-translate-y-16 opacity-0 blur-xs scale-95"
-        }`}
-      >
+      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
         <nav
-          className={`w-full max-w-7xl rounded-full border transition-all duration-500 ease-luxury ${
+          className={`w-full max-w-7xl rounded-full border px-6 transition-all duration-500 ease-luxury ${
             scrolled
-              ? "border-white/15 bg-black/45 px-6 py-2.5 shadow-2xl shadow-black/40 backdrop-blur-xl"
-              : "border-white/10 bg-black/20 px-6 py-3 shadow-lg backdrop-blur-md"
+              ? "border-white/15 bg-black/45 py-2.5 shadow-2xl shadow-black/40 backdrop-blur-xl"
+              : "border-white/10 bg-black/20 py-3 shadow-lg shadow-black/20 backdrop-blur-md"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -252,19 +241,13 @@ export default function Navbar() {
               type="button"
               onClick={() => scrollToSection("hero")}
               aria-label="ZentriX Home"
-              className={`transition-all duration-[1400ms] delay-150 ease-luxury hover:scale-105 cursor-pointer ${
-                mounted ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0"
-              }`}
+              className="transition-transform duration-300 ease-luxury hover:scale-105 cursor-pointer"
             >
               <ZXLogo size="sm" showWordmark={true} />
             </button>
 
             {/* Desktop Navigation Links */}
-            <div
-              className={`hidden items-center gap-7 md:flex transition-all duration-[1400ms] delay-250 ease-luxury ${
-                mounted ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
-              }`}
-            >
+            <div className="hidden items-center gap-7 md:flex">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 return (
@@ -286,11 +269,7 @@ export default function Navbar() {
             </div>
 
             {/* Right Side Actions */}
-            <div
-              className={`hidden items-center gap-5 md:flex transition-all duration-[1400ms] delay-350 ease-luxury ${
-                mounted ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
-              }`}
-            >
+            <div className="hidden items-center gap-5 md:flex">
               {/* Search Icon Button */}
               <button
                 type="button"
@@ -429,9 +408,7 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-label="Toggle menu"
               aria-expanded={open}
-              className={`grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white md:hidden transition-all duration-300 hover:border-lime-400 hover:text-lime-400 hover:scale-110 active:scale-90 ${
-                mounted ? "opacity-100 scale-100" : "opacity-0 scale-90"
-              }`}
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white md:hidden transition-all duration-300 hover:border-lime-400 hover:text-lime-400 hover:scale-110 active:scale-90"
             >
               <svg
                 width="20"
